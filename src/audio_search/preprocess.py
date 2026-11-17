@@ -130,10 +130,16 @@ def preprocess_file(src: Path, out_dir: Path = config.WAV_DIR) -> Preprocessed:
 
 
 def validate_duration(duration_s: float,
-                      min_sec: float = config.MIN_DURATION_S,
-                      max_sec: float = config.MAX_DURATION_S) -> bool:
-    """Return whether a file's duration falls in the acceptable range."""
-    return min_sec <= duration_s <= max_sec
+                      min_sec: float | None = None,
+                      max_sec: float | None = None) -> bool:
+    """Return whether a file's duration falls in the acceptable range.
+
+    Bounds default to the *current* config values (read at call time, so the
+    CLI's --min-duration / --max-duration overrides take effect).
+    """
+    lo = config.MIN_DURATION_S if min_sec is None else min_sec
+    hi = config.MAX_DURATION_S if max_sec is None else max_sec
+    return lo <= duration_s <= hi
 
 
 def run(data_dir: Path = config.DATA_DIR, out_dir: Path = config.WAV_DIR) -> dict:

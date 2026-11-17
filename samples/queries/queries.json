@@ -1,0 +1,65 @@
+[
+  {
+    "file": "q1_tts_david_ted_excerpt.wav",
+    "kind": "known_content_new_speaker",
+    "expected_content": "How_to_Fix_Africa’s_Learning_Crisis_Rapelang_Rabana_TED",
+    "expected_speaker_file": null,
+    "note": "TTS (David) đọc một đoạn transcript của bài TED có trong CSDL"
+  },
+  {
+    "file": "q2_tts_zira_khan_excerpt.wav",
+    "kind": "known_content_new_speaker",
+    "expected_content": "028_Games and modularity ｜ Intro to CS - Python ｜ Khan Academy",
+    "expected_speaker_file": null,
+    "note": "TTS (Zira) đọc một đoạn bài giảng Khan Academy có trong CSDL"
+  },
+  {
+    "file": "q3_tts_zira_story_paraphrase.wav",
+    "kind": "known_content_new_speaker",
+    "expected_content": "'Harry_the_Dirty_Dog'_read_by_Betty_White",
+    "expected_speaker_file": null,
+    "note": "TTS (Zira) kể lại bằng lời khác câu chuyện 'Harry the Dirty Dog'"
+  },
+  {
+    "file": "q4_tts_david_new_topic_sourdough.wav",
+    "kind": "new_content_new_speaker",
+    "expected_content": null,
+    "expected_speaker_file": null,
+    "note": "TTS (David) nói về bánh mì sourdough — chủ đề không có trong CSDL"
+  },
+  {
+    "file": "q5_tts_zira_new_topic_photosynthesis.wav",
+    "kind": "new_content_new_speaker",
+    "expected_content": null,
+    "expected_speaker_file": null,
+    "note": "TTS (Zira) giảng về quang hợp — chủ đề không có trong CSDL"
+  },
+  {
+    "file": "q6_real_ted_clip.wav",
+    "kind": "known_content_known_speaker",
+    "expected_content": "The_Brilliance_of_Bacteria_(and_How_They_Combat_Waste)_Patricia_Aymà_Maldonado_TED",
+    "expected_speaker_file": "The_Brilliance_of_Bacteria_(and_How_They_Combat_Waste)_Patricia_Aymà_Maldonado_TED",
+    "note": "45 s cắt từ bản ghi gốc của một bài TED trong CSDL (giọng thật)"
+  },
+  {
+    "file": "q7_real_ted_clip_rerecorded.wav",
+    "kind": "known_content_known_speaker",
+    "expected_content": "The_Brilliance_of_Bacteria_(and_How_They_Combat_Waste)_Patricia_Aymà_Maldonado_TED",
+    "expected_speaker_file": "The_Brilliance_of_Bacteria_(and_How_They_Combat_Waste)_Patricia_Aymà_Maldonado_TED",
+    "note": "q6 qua bộ lọc điện thoại 300-3400 Hz + nhiễu trắng SNR 15 dB (giả lập thu lại)"
+  },
+  {
+    "file": "human_mark_rober_talk_clip.wav",
+    "kind": "new_content_new_speaker",
+    "expected_content": null,
+    "expected_speaker_file": null,
+    "note": "Giọng người thật bên ngoài CSDL: Mark Rober (TED, không có trong 529 file), đoạn 45 s"
+  },
+  {
+    "file": "human_mark_rober_talk_clip_phone.wav",
+    "kind": "new_content_new_speaker",
+    "expected_content": null,
+    "expected_speaker_file": null,
+    "note": "Giọng người thật bên ngoài CSDL: Mark Rober (TED, không có trong 529 file), đoạn 45 s, thu qua dải điện thoại + nhiễu 15 dB"
+  }
+]

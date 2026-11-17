@@ -128,7 +128,7 @@ Module xây dựng pipeline 2 bước:
 
 #### b) Nhúng ngữ nghĩa văn bản (Semantic Embedding)
 
-- **`chunk_to_sentences`**: Cắt văn bản theo ranh giới dấu câu (`.`, `!`, `?`), nhóm các câu liên tiếp thành các đoạn có độ dài tối đa 1200 ký tự để không vượt quá giới hạn ngữ cảnh của Transformer.
+- **`chunk_to_sentences`**: Cắt văn bản theo ranh giới dấu câu (`.`, `!`, `?`), nhóm các câu liên tiếp thành các đoạn tối đa 250 token (đếm bằng tokenizer của MiniLM, giới hạn cứng 256) để không đoạn nào bị cắt; câu làm tràn đoạn sẽ mở đoạn mới, câu quá dài được tách theo từ.
 - Sử dụng mô hình **`sentence-transformers/all-MiniLM-L6-v2`**.
 - Mã hóa từng chunk thành vector 384 chiều, sau đó áp dụng **Mean-pooling** trên tất cả các chunk để tạo thành 1 vector duy nhất đại diện cho toàn bộ bài nói.
 - **Chuẩn hóa $L_2$**: Vector ngữ nghĩa 384 chiều được chuẩn hóa độ dài về 1.0.

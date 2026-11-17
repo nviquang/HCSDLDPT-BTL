@@ -22,8 +22,10 @@ dependencies = [
     "scikit-learn>=1.4",
     "pandas>=2",
     "pyarrow>=15",
+    "matplotlib>=3.8",
     "tqdm",
     "requests>=2",
+    "streamlit>=1.40",
 ]
 
 [project.scripts]
@@ -43,13 +45,13 @@ build-backend = "uv_build"
 package = true
 
 [[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
 [tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-torchaudio = { index = "pytorch-cpu" }
+torch = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
 
 [tool.ruff.lint]
 # BLE001: blind `except Exception` is intentional — batch pipeline isolates

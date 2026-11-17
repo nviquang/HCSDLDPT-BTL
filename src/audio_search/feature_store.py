@@ -49,7 +49,13 @@ def write_voice_artifact(file_id: str, features: dict, filename: str = "", durat
 
 
 def write_content_artifact(file_id: str, features: dict, filename: str = "", duration_s: float = 0.0) -> Path:
-    """Write content features for one file -> artifacts/features/content-<file_id>.json."""
+    """Write content features for one file -> artifacts/features/content-<file_id>.json.
+
+    `runtime` records the ASR backend (e.g. "cuda/float16") so a corpus can
+    never mix artifacts produced by different backends unnoticed — Whisper
+    transcripts differ between int8 and float16, and the comparison would
+    silently be apples-to-oranges.
+    """
     config.ensure_dirs()
     payload = {
         "feature_version": config.FEATURE_VERSION,
@@ -59,10 +65,42 @@ def write_content_artifact(file_id: str, features: dict, filename: str = "", dur
         "n_chunks": features["n_chunks"],
         "transcript": features["transcript"],
         "semantic_embedding": _clean(features["semantic_embedding"]),  # 384-D
+        "chunks": features.get("chunks", []),
+        "chunk_embeddings": _clean(features.get("chunk_embeddings", [])),  # (K, 384)
+        "runtime": features.get("runtime", ""),
     }
     out_path = config.FEATURES_DIR / f"content-{file_id}.json"
-    out_path.write_text(json.dumps(payload, indent=2))
+    out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return out_path
+
+
+def reembed_content_artifacts() -> dict:
+    """Recompute semantic embeddings from the stored transcripts.
+
+    Re-running Whisper on 60 h of audio is the expensive part; the chunking +
+    sentence-embedding step is cheap. This rewrites every content artifact
+    with the current chunker (feature_version bumped) without touching ASR.
+    """
+    from . import content_features
+
+    ok = 0
+    paths = sorted(config.FEATURES_DIR.glob("content-*.json"))
+    for i, path in enumerate(paths, 1):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        sem = content_features.embed_content(payload.get("transcript", ""))
+        payload.update({
+            "feature_version": config.FEATURE_VERSION,
+            "n_chunks": sem["n_chunks"],
+            "semantic_embedding": _clean(sem["semantic_embedding"]),
+            "chunks": sem["chunks"],
+            "chunk_embeddings": _clean(sem["chunk_embeddings"]),
+        })
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        ok += 1
+        if i % 50 == 0:
+            logger.info("re-embedded %d/%d", i, len(paths))
+    logger.info("re-embedded %d content artifact(s)", ok)
+    return {"ok": ok, "total": len(paths)}
 
 
 def artifact_exists(file_id: str) -> bool:

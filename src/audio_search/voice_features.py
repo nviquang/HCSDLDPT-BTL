@@ -95,7 +95,7 @@ def get_ecapa_model():
     from speechbrain.inference.speaker import EncoderClassifier
     from speechbrain.utils.fetching import LocalStrategy
 
-    device = "cuda" if _cuda_available() else "cpu"
+    device = config.resolve_device()
     logger.info("loading ECAPA-TDNN on device=%s ...", device)
     return EncoderClassifier.from_hparams(
         source=config.ECAPA_MODEL_ID,
@@ -103,12 +103,6 @@ def get_ecapa_model():
         run_opts={"device": device},
         local_strategy=LocalStrategy.COPY,   # Windows: avoid symlink permission errors
     )
-
-
-def _cuda_available() -> bool:
-    import torch
-
-    return bool(torch.cuda.is_available())
 
 
 def compute_ecapa_embedding(wave: np.ndarray, sr: int = config.SAMPLE_RATE) -> np.ndarray:

@@ -76,7 +76,9 @@ Package đã đổi tên: `src/btl` → `src/audio_search`.
 | `numpy`                                                           | **<2.3**              | tránh breaking change                                                                                           |
 | `scikit-learn`, `scipy`, `pandas`, `pyarrow`, `soundfile`, `tqdm` | latest                | cos sim, manifest, đọc audio                                                                                    |
 
-**Lưu ý CPU vs GPU:** mặc định **CPU** (torch CPU wheel từ `https://download.pytorch.org/whl/cpu`, đã khai báo trong `pyproject.toml` qua `[tool.uv.sources]`). GPU (GTX 1650 4GB) chỉ bật khi cần tăng tốc batch lớn:
+**Cập nhật:** `pyproject.toml` hiện dùng torch **CUDA 12.8** (`pytorch-cu128`); `config.resolve_device()` tự rơi về CPU khi không có GPU.
+
+**Lưu ý CPU vs GPU (bản gốc):** mặc định **CPU** (torch CPU wheel từ `https://download.pytorch.org/whl/cpu`, đã khai báo trong `pyproject.toml` qua `[tool.uv.sources]`). GPU (GTX 1650 4GB) chỉ bật khi cần tăng tốc batch lớn:
 
 ```powershell
 uv remove torch torchaudio
@@ -155,7 +157,7 @@ uv run python scripts/download_models.py
 
 **Whisper (ASR):** Transformer seq2seq, huấn luyện ~680k giờ đa ngữ → chuyển **giọng nói → văn bản** (transcript). Đây là cầu nối "âm thanh → nội dung chữ".
 
-**Semantic embedding (primary):** `all-MiniLM-L6-v2` (384-D) — mapper văn bản → vector sao cho **các đoạn cùng chủ đề gần nhau**. Vì transcript có thể rất dài, cắt thành **chunk theo câu** (≤ ~1200 ký tự, dưới giới hạn 512 token), embed từng chunk, **mean-pool** → vector đại diện cả file.
+**Semantic embedding (primary):** `all-MiniLM-L6-v2` (384-D) — mapper văn bản → vector sao cho **các đoạn cùng chủ đề gần nhau**. Vì transcript có thể rất dài, cắt thành **chunk theo câu** (≤ 250 token theo tokenizer của model — giới hạn cứng của all-MiniLM-L6-v2 là 256), embed từng chunk, **mean-pool** → vector đại diện cả file.
 
 **Cách dùng (G5):** file query → trích 2 vector → `ORDER BY emb <=> :q` (cosine, pgvector) → top-3 giọng + top-3 nội dung, giảm dần độ tương đồng.
 
